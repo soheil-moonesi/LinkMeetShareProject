@@ -51,7 +51,7 @@ using (var scope = app.Services.CreateScope())
 
                 context.Update(new MeetingLink()
                 {
-                    id = 1,
+                    MeetingLinkKey = 1,
                     Link = "www.soheil.com",
                     Tittle = "soheil Moonesi",
                 });
@@ -60,14 +60,14 @@ using (var scope = app.Services.CreateScope())
 
                 context.Update(new User
                 {
-                    Id = 1,
+                    UserKey = 1,
                     Email = "soheil@gmail.com"
                 });
 
                 context.Update(new MeetingLinkUser()
                 {
-                    MeetingLinkId = 1,
-                    UserId = 1
+                    MeetingLinkKey_R = 1,
+                    UserKey_R = 1
                 });
 
                 context.SaveChanges();
@@ -75,10 +75,6 @@ using (var scope = app.Services.CreateScope())
         }
         catch (Exception ex)
         {
-            var logger = servicesProvider
-                .GetRequiredService<ILogger<Program>>();
-            logger.LogError(ex,
-                "An error occurred while migrating the database.");
             throw;
         }
 

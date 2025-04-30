@@ -17,23 +17,24 @@ namespace LinkMeetShareProject
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           // base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>().HasKey("UserKey");
+            modelBuilder.Entity<MeetingLink>().HasKey("MeetingLinkKey");
 
             modelBuilder.Entity<MeetingLinkUser>()
-                .HasKey("MeetingLinkId", "UserId");
+                .HasKey("MeetingLinkKey_R", "UserKey_R");
 
             modelBuilder.Entity<MeetingLink>()
-                .HasMany(p => p.Users).WithOne(p => p.MeetingLink)
-                .HasForeignKey(p => p.MeetingLinkId);
+                .HasMany(p => p.UsersJoinToMeet).WithOne(p =>p.MeetingLink_R)
+                .HasForeignKey(p => p.MeetingLinkKey_R);
 
-            modelBuilder.Entity<User>().HasMany(p => p.Links)
-                .WithOne(p => p.User)
-                .HasForeignKey(p => p.UserId);
+            modelBuilder.Entity<User>().HasMany(p => p.UserEnrollLinks)
+                .WithOne(p => p.User_R)
+                .HasForeignKey(p => p.UserKey_R);
 
         }
     }

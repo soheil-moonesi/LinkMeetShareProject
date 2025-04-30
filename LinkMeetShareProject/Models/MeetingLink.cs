@@ -2,10 +2,10 @@
 {
     public class MeetingLink
     {
-        public int id { get; set; }
+        public int MeetingLinkKey { get; set; }
         public string Tittle { get; set; }
         public string Link { get; set; }
         public DateTime Time { get; set; }
-        public ICollection<MeetingLinkUser> Users { get; set; }
+        public ICollection<MeetingLinkUser> UsersJoinToMeet { get; set; }
     }
 }

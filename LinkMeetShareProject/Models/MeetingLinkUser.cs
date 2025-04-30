@@ -2,11 +2,10 @@
 {
     public class MeetingLinkUser
     {
-        public int MeetingLinkId { get; set; }
-        public MeetingLink MeetingLink { get; set; }
-
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public int MeetingLinkKey_R { get; set; }
+        public MeetingLink MeetingLink_R { get; set; }
+        public int UserKey_R { get; set; }
+        public User User_R { get; set; }
 
     }
 }

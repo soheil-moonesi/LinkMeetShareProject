@@ -2,8 +2,8 @@
 {
     public class User
     {
-        public int Id { get; set; }
+        public int UserKey { get; set; }
         public string Email { get; set; }
-        public ICollection<MeetingLinkUser> Links { get; set; }
+        public ICollection<MeetingLinkUser> UserEnrollLinks { get; set; }
     }
 }
