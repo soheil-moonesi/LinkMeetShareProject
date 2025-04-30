@@ -15,7 +15,7 @@ namespace LinkMeetShareProject.Migrations
                 name: "MeetingLink",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                    MeetingLinkKey = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Tittle = table.Column<string>(type: "TEXT", nullable: false),
                     Link = table.Column<string>(type: "TEXT", nullable: false),
@@ -23,50 +23,50 @@ namespace LinkMeetShareProject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MeetingLink", x => x.id);
+                    table.PrimaryKey("PK_MeetingLink", x => x.MeetingLinkKey);
                 });
 
             migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserKey = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Email = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_User", x => x.UserKey);
                 });
 
             migrationBuilder.CreateTable(
                 name: "MeetingLinkUser",
                 columns: table => new
                 {
-                    MeetingLinkId = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    MeetingLinkKey_R = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserKey_R = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MeetingLinkUser", x => new { x.MeetingLinkId, x.UserId });
+                    table.PrimaryKey("PK_MeetingLinkUser", x => new { x.MeetingLinkKey_R, x.UserKey_R });
                     table.ForeignKey(
-                        name: "FK_MeetingLinkUser_MeetingLink_MeetingLinkId",
-                        column: x => x.MeetingLinkId,
+                        name: "FK_MeetingLinkUser_MeetingLink_MeetingLinkKey_R",
+                        column: x => x.MeetingLinkKey_R,
                         principalTable: "MeetingLink",
-                        principalColumn: "id",
+                        principalColumn: "MeetingLinkKey",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MeetingLinkUser_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_MeetingLinkUser_User_UserKey_R",
+                        column: x => x.UserKey_R,
                         principalTable: "User",
-                        principalColumn: "Id",
+                        principalColumn: "UserKey",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MeetingLinkUser_UserId",
+                name: "IX_MeetingLinkUser_UserKey_R",
                 table: "MeetingLinkUser",
-                column: "UserId");
+                column: "UserKey_R");
         }
 
         /// <inheritdoc />

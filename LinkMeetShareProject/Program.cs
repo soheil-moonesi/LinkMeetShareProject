@@ -23,6 +23,8 @@ builder.Services.AddDbContext<LinkMeetShareProjectDbContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<LinkMeetShareProjectDbContext>();
+
 
 var app = builder.Build();
 
@@ -48,8 +50,8 @@ using (var scope = app.Services.CreateScope())
     {
         try
         {
-
-                context.Update(new MeetingLink()
+            //todo: create process to stop when seed is done before
+            context.Add(new MeetingLink()
                 {
                     MeetingLinkKey = 1,
                     Link = "www.soheil.com",
@@ -58,13 +60,13 @@ using (var scope = app.Services.CreateScope())
 
                 context.SaveChanges();
 
-                context.Update(new User
+                context.Add(new User
                 {
                     UserKey = 1,
                     Email = "soheil@gmail.com"
                 });
 
-                context.Update(new MeetingLinkUser()
+                context.Add(new MeetingLinkUser()
                 {
                     MeetingLinkKey_R = 1,
                     UserKey_R = 1
