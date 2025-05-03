@@ -23,7 +23,6 @@ builder.Services.AddDbContext<LinkMeetShareProjectDbContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<LinkMeetShareProjectDbContext>();
 
 
 var app = builder.Build();
@@ -48,6 +47,8 @@ using (var scope = app.Services.CreateScope())
     var servicesProvider = scope.ServiceProvider;
     using (var context = servicesProvider.GetRequiredService<LinkMeetShareProjectDbContext>())
     {
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
         try
         {
             //todo: create process to stop when seed is done before
