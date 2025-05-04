@@ -1,5 +1,6 @@
 ﻿using LinkMeetShareProject.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,32 +10,40 @@ namespace LinkMeetShareProject.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly UserMapper _mapper;
         private LinkMeetShareProjectDbContext _context;
-        public UserController(LinkMeetShareProjectDbContext context)
+        public UserController(LinkMeetShareProjectDbContext context, UserMapper mapper)
         {
-            _context= context;
+            _context = context;
+            _mapper = mapper;
         }
 
 
 
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<User> Get()
+        public async Task<IEnumerable<User>> Get()
         {
-            return _context.User.ToList();
+            return await _context.User.ToListAsync();
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<User> Get(int id)
         {
-            return "value";
+           return await _context.User.FindAsync(id);
         }
 
         // POST api/<UserController>
+
+        //todo : create Dto for Post 
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] UserAddDto value)
         {
+
+            var UserAdd  = _mapper.UserAddDtoToUser(value);
+             _context.User.Add(UserAdd);
+            _context.SaveChanges();
         }
 
         // PUT api/<UserController>/5
