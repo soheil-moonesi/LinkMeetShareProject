@@ -58,16 +58,33 @@ namespace LinkMeetShareProject.Controllers
         [HttpPut("{id}/all")]
         public void PutAll(int id, [FromBody] UserPutAllDto value)
         {
-            var x = _context.User.Include(q => q.UserEnrollLinks)
-                .FirstOrDefault(q => q.UserKey == id);
+            // Get the existing user with their current meeting links
+            var existingUser = _context.User
+                .Include(u => u.UserEnrollLinks)
+                .FirstOrDefault(u => u.UserKey == id);
 
-            var userPutAll = _mapper.UserPutAllDtoToUser(value);
+            if (existingUser == null)
+            {
+                return;
+            }
 
+            // Update the email
+            existingUser.Email = value.EmailDto;
 
-            x.Email = userPutAll.Email;
-            x.UserEnrollLinks = userPutAll.UserEnrollLinks;
+            // Update the meeting links
+            if (value.MeetingLinkUserDto != null)
+            {
+                // Clear existing links
+
+                // Add new links
+                foreach (var link in value.MeetingLinkUserDto)
+                {
+                    // Ensure the user key is set correctly
+                    existingUser.UserEnrollLinks.Add(link);
+                }
+            }
+
             _context.SaveChanges();
-
         }
 
 
