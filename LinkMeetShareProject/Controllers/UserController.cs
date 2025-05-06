@@ -48,9 +48,20 @@ namespace LinkMeetShareProject.Controllers
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] UserAddDto value)
         {
+          var x =  _context.User.Find(id);
+          x.Email = value.EmailDto;
+          _context.SaveChanges();
         }
+
+        [HttpPut("{id}")]
+        public void PutAll(int id, [FromBody] UserAddDto value)
+        {
+            var x = _context.User.Include(q => q.UserEnrollLinks).FirstOrDefault(q => q.UserKey == id);
+
+        }
+
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
