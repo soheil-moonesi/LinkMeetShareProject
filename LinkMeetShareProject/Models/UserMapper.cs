@@ -10,5 +10,10 @@ namespace LinkMeetShareProject
     {
         [MapProperty(nameof(UserAddDto.EmailDto), nameof(User.Email))] // Maps EmailDto→Email
         public partial User UserAddDtoToUser(UserAddDto user);
+
+        [MapProperty(nameof(UserPutAllDto.EmailDto), nameof(User.Email))] //
+        [MapProperty(nameof(UserPutAllDto.MeetingLinkUserDto), nameof(User.UserEnrollLinks))] // 
+        public partial User UserPutAllDtoToUser(UserPutAllDto user);
+
     }
 }

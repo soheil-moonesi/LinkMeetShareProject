@@ -55,10 +55,18 @@ namespace LinkMeetShareProject.Controllers
           _context.SaveChanges();
         }
 
-        [HttpPut("{id}")]
-        public void PutAll(int id, [FromBody] UserAddDto value)
+        [HttpPut("{id}/all")]
+        public void PutAll(int id, [FromBody] UserPutAllDto value)
         {
-            var x = _context.User.Include(q => q.UserEnrollLinks).FirstOrDefault(q => q.UserKey == id);
+            var x = _context.User.Include(q => q.UserEnrollLinks)
+                .FirstOrDefault(q => q.UserKey == id);
+
+            var userPutAll = _mapper.UserPutAllDtoToUser(value);
+
+
+            x.Email = userPutAll.Email;
+            x.UserEnrollLinks = userPutAll.UserEnrollLinks;
+            _context.SaveChanges();
 
         }
 

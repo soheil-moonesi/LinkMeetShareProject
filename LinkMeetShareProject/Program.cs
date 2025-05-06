@@ -76,7 +76,18 @@ using (var scope = app.Services.CreateScope())
                 });
 
                 context.SaveChanges();
-           
+
+
+                context.Add(new MeetingLink()
+                {
+                    MeetingLinkKey = 2,
+                    Link = "www.soh.com",
+                    Tittle = "soh",
+                });
+
+                context.SaveChanges();
+
+
         }
         catch (Exception ex)
         {
