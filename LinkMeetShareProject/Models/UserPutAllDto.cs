@@ -4,6 +4,6 @@
     {
         public string EmailDto { get; set; }
 
-        public ICollection<MeetingLinkUser> MeetingLinkUserDto { get; set; }
+        public ICollection<MeetingLinkUserDto> MeetingLinkUserDto { get; set; }
     }
 }

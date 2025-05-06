@@ -55,6 +55,7 @@ namespace LinkMeetShareProject.Controllers
           _context.SaveChanges();
         }
 
+        //todo:remove User id from Dto
         [HttpPut("{id}/all")]
         public void PutAll(int id, [FromBody] UserPutAllDto value)
         {
@@ -74,13 +75,17 @@ namespace LinkMeetShareProject.Controllers
             // Update the meeting links
             if (value.MeetingLinkUserDto != null)
             {
-                // Clear existing links
 
                 // Add new links
                 foreach (var link in value.MeetingLinkUserDto)
                 {
+                    var newLink = new MeetingLinkUser
+                    {
+                        MeetingLinkKey_R = link.MeetingLinkKey_R,
+                        UserKey_R = id
+                    };
                     // Ensure the user key is set correctly
-                    existingUser.UserEnrollLinks.Add(link);
+                    existingUser.UserEnrollLinks.Add(newLink);
                 }
             }
 

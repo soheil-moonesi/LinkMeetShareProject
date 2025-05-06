@@ -87,6 +87,15 @@ using (var scope = app.Services.CreateScope())
 
                 context.SaveChanges();
 
+                context.Add(new MeetingLink()
+                {
+                    MeetingLinkKey = 3,
+                    Link = "www.face.com",
+                    Tittle = "face",
+                });
+
+                context.SaveChanges();
+
 
         }
         catch (Exception ex)
