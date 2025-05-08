@@ -1,4 +1,5 @@
-﻿using LinkMeetShareProject.Models;
+﻿using LinkMeetShareProject.Dto;
+using LinkMeetShareProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +18,6 @@ namespace LinkMeetShareProject.Controllers
             _context = context;
             _mapper = mapper;
         }
-
 
 
         // GET: api/<UserController>
@@ -86,17 +86,29 @@ namespace LinkMeetShareProject.Controllers
                     };
                     // Ensure the user key is set correctly
                     existingUser.UserEnrollLinks.Add(newLink);
+                    _context.SaveChanges();
                 }
             }
 
-            _context.SaveChanges();
         }
 
 
         // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id}/{linkId}")]
+        public void DeleteMeetingLink(int id,int linkId)
         {
+            var existingUser = _context.User.Include(q => q.UserEnrollLinks).FirstOrDefault(q => q.UserKey == id);
+            foreach (var link in existingUser.UserEnrollLinks)
+            {
+                if (linkId==link.MeetingLinkKey_R)
+                {
+                    _context.MeetingLinkUser.Remove(link);
+                    _context.SaveChanges();
+                }
+            }
+
+
+
         }
     }
 }

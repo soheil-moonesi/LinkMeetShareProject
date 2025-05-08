@@ -1,4 +1,4 @@
-﻿namespace LinkMeetShareProject.Models
+﻿namespace LinkMeetShareProject.Dto
 {
     public class UserPutAllDto
     {

@@ -1,10 +1,11 @@
 ﻿using System.Runtime.InteropServices;
+using LinkMeetShareProject.Dto;
 using LinkMeetShareProject.Models;
 using Riok.Mapperly.Abstractions;
 
 
 namespace LinkMeetShareProject
-{   
+{
     [Mapper]
     public partial class UserMapper
     {
