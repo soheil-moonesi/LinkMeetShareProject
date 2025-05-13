@@ -37,13 +37,14 @@ namespace LinkMeetShareProject.Controllers
         // POST api/<UserController>
 
         //todo : create Dto for Post 
-        [HttpPost]
-        public void Post([FromBody] UserAddDto value)
+        [HttpPost("AddUser")]
+        public async Task<string> AddUser([FromBody] UserAddDto value)
         {
 
             var UserAdd  = _mapper.UserAddDtoToUser(value);
              _context.User.Add(UserAdd);
             _context.SaveChanges();
+            return "user added";
         }
 
         // PUT api/<UserController>/5
