@@ -1,7 +1,105 @@
 ﻿@page "/"
+@using Radzen
+@using System.Text.Json
+@using FluentValidation
+
+
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
+<RadzenStack class="rz-p-0 rz-p-md-12">
+    <RadzenCard Variant="Variant.Outlined" Style="width: 100%">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+            <RadzenCheckBox @bind-Value=@popup Name="popup"></RadzenCheckBox>
+            <RadzenLabel Text="Display validators as popup" Component="popup" />
+        </RadzenStack>
+    </RadzenCard>
+
+    <RadzenTemplateForm TItem="Model" Data=@model Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+        <RadzenFieldset Text="Enter email">
+            <RadzenStack Gap="2rem" class="rz-p-4 rz-p-md-12">
+                <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                    <RadzenColumn Size="12" SizeMD="4" class="rz-text-align-start rz-text-align-md-end">
+                        <RadzenLabel Text="Email" Component="Email" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenTextBox Name="Email" @bind-Value=@model.Email Style="display: block; width: 100%;" />
+                        <RadzenRequiredValidator Component="Email" Text="Email is required" Popup=@popup Style="position: absolute" />
+                        <RadzenEmailValidator Component="Email" Text="Provide a valid email address" Popup=@popup Style="position: absolute" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow AlignItems="AlignItems.Center" class="rz-mt-4">
+                    <RadzenColumn Size="12" Offset="0" SizeMD="8" OffsetMD="4">
+                        <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenStack>
+        </RadzenFieldset>
+    </RadzenTemplateForm>
+
+    <EventConsole @ref=@console />
+</RadzenStack>
+
+
+<Counter></Counter>
+
 Welcome to your new app.
+
+    
+@code {
+
+    public class Model
+    {
+        public string Email { get; set; }
+    }
+
+    bool popup;
+
+    Model model = new Model();
+    EventConsole console;
+
+    public class UserValidator : AbstractValidator<Model>
+    {
+        public UserValidator()
+        {
+            RuleFor(user => user.Email)
+                .NotEmpty().WithMessage("Email is required")
+                .EmailAddress().WithMessage("A valid email is required")
+                .MaximumLength(256).WithMessage("Email must not exceed 256 characters")
+                .Must(BeAValidDomain).WithMessage("Email domain is not allowed");
+        }
+
+        private bool BeAValidDomain(string email)
+        {
+            // Add your custom domain validation logic here
+            var allowedDomains = new[] { "example.com", "company.org" };
+            var domain = email.Split('@').Last();
+            return allowedDomains.Contains(domain);
+        }
+    }
+
+
+
+    void Log(string eventName, string value)
+    {
+        console.Log($"{eventName}: {value}");
+    }
+
+    void OnSubmit(Model model)
+    {
+        Log("Submit", JsonSerializer.Serialize(model, new JsonSerializerOptions() { WriteIndented = true }));
+
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        Log("InvalidSubmit", JsonSerializer.Serialize(args, new JsonSerializerOptions() { WriteIndented = true }));
+    }
+
+    string value = "";
+
+     Variant variant = Variant.Outlined;
+
+}
