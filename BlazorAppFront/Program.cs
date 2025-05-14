@@ -2,8 +2,8 @@ using BlazorAppFront;
 using BlazorAppFront.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using MudBlazor.Services;
-using MudBlazor.Services;
+using Radzen;
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -13,7 +13,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddHttpClient("ApiCalls");
 
 builder.Services.AddScoped<UserServices>();
+builder.Services.AddRadzenComponents();
 
-
-builder.Services.AddMudServices();
 await builder.Build().RunAsync();

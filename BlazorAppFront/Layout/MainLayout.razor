@@ -2,29 +2,24 @@
 
 @using Microsoft.VisualBasic
 @inherits LayoutComponentBase
-@* Required *@
-<MudThemeProvider />
-<MudPopoverProvider />
 
-@* Needed for dialogs *@
-<MudDialogProvider />
 
-@* Needed for snackbars *@
-<MudSnackbarProvider />
+<HeadContent>
+    <RadzenTheme Theme="material" />
+</HeadContent>
 
-<MudLayout>
-    <MudAppBar Color="Color.Primary" Fixed="false">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
-        <MudSpacer />
-        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
-    </MudAppBar>
-    <MudMainContent>
-        @Body
-    </MudMainContent>
-</MudLayout>
+<RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
+
+
 
 @code
 {
+
+    void ButtonClicked()
+    {
+        Console.WriteLine("clicked");
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await AddUser();
@@ -38,6 +33,7 @@
         };
       await UserServices.AddUser(email);
 
+      //todo: add section for show message
       // return 000 from user service 
     }
 }
