@@ -8,7 +8,18 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
+<RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
+
+
+
 @code {
+
+    void ButtonClicked()
+    {
+        Console.WriteLine("clicked");
+    }
+
+
     private int currentCount = 0;
 
     private void IncrementCount()

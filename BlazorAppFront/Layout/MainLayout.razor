@@ -1,25 +1,32 @@
 ﻿@inject Services.UserServices UserServices;
-
-@using Microsoft.VisualBasic
 @inherits LayoutComponentBase
 
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
 
-<HeadContent>
-    <RadzenTheme Theme="material" />
-</HeadContent>
+    <main>
+        <div class="top-row px-4">
+            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        </div>
 
-<RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
+        <article class="content px-4">
+            <HeadContent>
+                <RadzenTheme Theme="material" />
+            </HeadContent>
+            @Body
+        </article>
+    </main>
+</div>
+
 
 
 
 @code
 {
 
-    void ButtonClicked()
-    {
-        Console.WriteLine("clicked");
-    }
-
+ 
     protected override async Task OnInitializedAsync()
     {
         await AddUser();
@@ -31,6 +38,7 @@
         {
             EmailDto = "ssss@gde",
         };
+
       await UserServices.AddUser(email);
 
       //todo: add section for show message
