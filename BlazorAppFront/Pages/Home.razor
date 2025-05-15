@@ -2,8 +2,8 @@
 @using Radzen
 @using System.Text.Json
 @using FluentValidation
-
-
+@using FluentValidation.Results
+@using FluentValidation.Validators
 
 <PageTitle>Home</PageTitle>
 
@@ -55,31 +55,38 @@ Welcome to your new app.
         public string Email { get; set; }
     }
 
-    bool popup;
-
-    Model model = new Model();
-    EventConsole console;
-
+    //todo: create validator in server side
     public class UserValidator : AbstractValidator<Model>
     {
         public UserValidator()
         {
-            RuleFor(user => user.Email)
+            RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required")
-                .EmailAddress().WithMessage("A valid email is required")
-                .MaximumLength(256).WithMessage("Email must not exceed 256 characters")
-                .Must(BeAValidDomain).WithMessage("Email domain is not allowed");
+                .MaximumLength(254).WithMessage("Email cannot exceed 254 characters")
+                .EmailAddress().WithMessage("Valid email format required")
+                .Must(BeAValidDomain).WithMessage("We only accept emails from trusted domains")
+                .Matches(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+                .WithMessage("Invalid email format");
         }
 
         private bool BeAValidDomain(string email)
         {
             // Add your custom domain validation logic here
-            var allowedDomains = new[] { "example.com", "company.org" };
+            var allowedDomains = new[] { "example.com", "c.org" };
             var domain = email.Split('@').Last();
             return allowedDomains.Contains(domain);
         }
     }
 
+    bool popup;
+
+    Model model = new Model();
+
+    UserValidator validator = new UserValidator();
+
+
+
+    EventConsole console;
 
 
     void Log(string eventName, string value)
@@ -89,7 +96,10 @@ Welcome to your new app.
 
     void OnSubmit(Model model)
     {
-        Log("Submit", JsonSerializer.Serialize(model, new JsonSerializerOptions() { WriteIndented = true }));
+        ValidationResult result = validator.Validate(model);
+
+        
+        Log( result.Errors.FirstOrDefault()?.ErrorMessage ?? "Validation success", JsonSerializer.Serialize(model, new JsonSerializerOptions() { WriteIndented = true }));
 
     }
 
