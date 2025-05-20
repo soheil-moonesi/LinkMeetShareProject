@@ -15,7 +15,26 @@ else if (!meetingLinks.Any())
 }
 else
 {
-    <div class="link-container">
+<RadzenRow>
+    @foreach (var link in meetingLinks)
+    {
+        <RadzenColumn >
+            <RadzenCard class="rz-my-12" Style="max-width: 420px">
+                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" class="rz-p-4 rz-display-flex" Wrap="FlexWrap.Wrap">
+                    <RadzenStack Gap="0">
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0 ">
+                           @link.Link
+                        </RadzenText>
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">Company</RadzenText>
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenCard>
+        </RadzenColumn>
+    }
+</RadzenRow>
+
+
+@*     <div class="link-container">
         @foreach (var link in meetingLinks)
         {
             <div class="link-card">
@@ -24,7 +43,7 @@ else
             
                 </div>
             }
-    </div>
+    </div> *@
 }
 
 @code {
