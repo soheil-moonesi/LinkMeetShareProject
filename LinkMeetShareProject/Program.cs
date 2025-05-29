@@ -2,13 +2,24 @@ using System.Text;
 using LinkMeetShareProject;
 using LinkMeetShareProject.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
 using Microsoft.IdentityModel.Tokens;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var dbPath = Path.Combine(AppContext.BaseDirectory, "LinkMeetShareProject.db");
+builder.Services.AddDbContext<LinkMeetShareProjectDbContext>(options =>
+    options.UseSqlite($"Data Source={dbPath}"));
+
+builder.Services.AddIdentityCore<ApiUser>()
+    .AddRoles<IdentityRole>().AddTokenProvider<DataProtectorTokenProvider<ApiUser>>("HotelListingApi")
+    .AddEntityFrameworkStores<LinkMeetShareProjectDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<UserMapper>();
@@ -41,10 +52,6 @@ builder.Services.AddCors(options =>
     //cpb = configure Policy builder
 });
 
-var dbPath = Path.Combine(AppContext.BaseDirectory, "LinkMeetShareProject.db");
-builder.Services.AddDbContext<LinkMeetShareProjectDbContext>(options =>
-    options.UseSqlite($"Data Source={dbPath}"));
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -73,52 +80,52 @@ using (var scope = app.Services.CreateScope())
     var servicesProvider = scope.ServiceProvider;
     using (var context = servicesProvider.GetRequiredService<LinkMeetShareProjectDbContext>())
     {
-        context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
+       // context.Database.EnsureDeleted();
+        //context.Database.EnsureCreated();
         try
         {
-            //todo: create process to stop when seed is done before
+       // todo: create process to stop when seed is done before
             context.Add(new MeetingLink()
-                {
-                    MeetingLinkKey = 1,
-                    Link = "www.soheil.com",
-                    Tittle = "soheil Moonesi",
-                });
+            {
+                MeetingLinkKey = 1,
+                Link = "www.soheil.com",
+                Tittle = "soheil Moonesi",
+            });
 
-                context.SaveChanges();
+            context.SaveChanges();
 
-                context.Add(new User
-                {
-                    UserKey = 1,
-                    Email = "soheil@gmail.com"
-                });
+            context.Add(new User
+            {
+                UserKey = 1,
+                Email = "soheil@gmail.com"
+            });
 
-                context.Add(new MeetingLinkUser()
-                {
-                    MeetingLinkKey_R = 1,
-                    UserKey_R = 1
-                });
+            context.Add(new MeetingLinkUser()
+            {
+                MeetingLinkKey_R = 1,
+                UserKey_R = 1
+            });
 
-                context.SaveChanges();
+            context.SaveChanges();
 
 
-                context.Add(new MeetingLink()
-                {
-                    MeetingLinkKey = 2,
-                    Link = "www.soh.com",
-                    Tittle = "soh",
-                });
+            context.Add(new MeetingLink()
+            {
+                MeetingLinkKey = 2,
+                Link = "www.soh.com",
+                Tittle = "soh",
+            });
 
-                context.SaveChanges();
+            context.SaveChanges();
 
-                context.Add(new MeetingLink()
-                {
-                    MeetingLinkKey = 3,
-                    Link = "www.face.com",
-                    Tittle = "face",
-                });
+            context.Add(new MeetingLink()
+            {
+                MeetingLinkKey = 3,
+                Link = "www.face.com",
+                Tittle = "face",
+            });
 
-                context.SaveChanges();
+            context.SaveChanges();
 
 
         }

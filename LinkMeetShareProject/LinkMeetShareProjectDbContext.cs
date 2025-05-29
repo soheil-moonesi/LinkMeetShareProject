@@ -1,10 +1,12 @@
 ﻿using LinkMeetShareProject.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace LinkMeetShareProject
 {
-    public class LinkMeetShareProjectDbContext : DbContext
+    public class LinkMeetShareProjectDbContext : IdentityDbContext<ApiUser>
     {
         public LinkMeetShareProjectDbContext(DbContextOptions<LinkMeetShareProjectDbContext> Options) : base(Options)
         {
