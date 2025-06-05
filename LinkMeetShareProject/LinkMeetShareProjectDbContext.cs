@@ -1,4 +1,5 @@
-﻿using LinkMeetShareProject.Models;
+﻿using HotelListing.Api.Data.Configurations;
+using LinkMeetShareProject.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,8 @@ namespace LinkMeetShareProject
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.Entity<User>().HasKey("UserKey");
             modelBuilder.Entity<MeetingLink>().HasKey("MeetingLinkKey");
 

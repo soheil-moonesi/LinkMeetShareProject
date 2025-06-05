@@ -23,6 +23,8 @@ builder.Services.AddIdentityCore<ApiUser>()
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<UserMapper>();
+builder.Services.AddScoped<UserDtoMapper>();
+
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -57,7 +59,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -80,52 +81,52 @@ using (var scope = app.Services.CreateScope())
     var servicesProvider = scope.ServiceProvider;
     using (var context = servicesProvider.GetRequiredService<LinkMeetShareProjectDbContext>())
     {
-       // context.Database.EnsureDeleted();
-        //context.Database.EnsureCreated();
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
         try
         {
        // todo: create process to stop when seed is done before
-            context.Add(new MeetingLink()
-            {
-                MeetingLinkKey = 1,
-                Link = "www.soheil.com",
-                Tittle = "soheil Moonesi",
-            });
+            //context.Add(new MeetingLink()
+            //{
+            //    MeetingLinkKey = 1,
+            //    Link = "www.soheil.com",
+            //    Tittle = "soheil Moonesi",
+            //});
 
-            context.SaveChanges();
+            //context.SaveChanges();
 
-            context.Add(new User
-            {
-                UserKey = 1,
-                Email = "soheil@gmail.com"
-            });
+            //context.Add(new User
+            //{
+            //    UserKey = 1,
+            //    Email = "soheil@gmail.com"
+            //});
 
-            context.Add(new MeetingLinkUser()
-            {
-                MeetingLinkKey_R = 1,
-                UserKey_R = 1
-            });
+            //context.Add(new MeetingLinkUser()
+            //{
+            //    MeetingLinkKey_R = 1,
+            //    UserKey_R = 1
+            //});
 
-            context.SaveChanges();
+            //context.SaveChanges();
 
 
-            context.Add(new MeetingLink()
-            {
-                MeetingLinkKey = 2,
-                Link = "www.soh.com",
-                Tittle = "soh",
-            });
+            //context.Add(new MeetingLink()
+            //{
+            //    MeetingLinkKey = 2,
+            //    Link = "www.soh.com",
+            //    Tittle = "soh",
+            //});
 
-            context.SaveChanges();
+            //context.SaveChanges();
 
-            context.Add(new MeetingLink()
-            {
-                MeetingLinkKey = 3,
-                Link = "www.face.com",
-                Tittle = "face",
-            });
+            //context.Add(new MeetingLink()
+            //{
+            //    MeetingLinkKey = 3,
+            //    Link = "www.face.com",
+            //    Tittle = "face",
+            //});
 
-            context.SaveChanges();
+            //context.SaveChanges();
 
 
         }

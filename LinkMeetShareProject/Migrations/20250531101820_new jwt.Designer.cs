@@ -3,6 +3,7 @@ using System;
 using LinkMeetShareProject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LinkMeetShareProject.Migrations
 {
     [DbContext(typeof(LinkMeetShareProjectDbContext))]
-    partial class LinkMeetShareProjectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250531101820_new jwt")]
+    partial class newjwt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.15");

@@ -19,8 +19,7 @@ namespace LinkMeetShareProject
         [MapProperty(nameof(MeetingLinkUserDto.MeetingLinkKey_R), nameof(MeetingLinkUser.MeetingLinkKey_R))] //
         [MapProperty(nameof(MeetingLinkUserDto.UserKey_R), nameof(MeetingLinkUser.UserKey_R))] // 
         public partial MeetingLinkUser  MeetingPutAllDtoToMeetingLinkUser(MeetingLinkUserDto value);
-
-
-
     }
+
+
 }

@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using LinkMeetShareProject.Dto;
 using LinkMeetShareProject.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,17 @@ namespace LinkMeetShareProject.Controllers
 
         private readonly IConfiguration _configuration;
         private readonly UserManager<ApiUser> _userManager;
+        private ApiUser _user;
+        private UserDtoMapper _userDtoMapper;
+        private const string _loginProvider = "LinkMeetShare";
+        private const string _refreshToken = "RefreshToken";
+        public AuthController(IConfiguration configuration, UserManager<ApiUser> userManager,
+            ILogger<AuthController> logger,UserDtoMapper userDtoMapper)
+        {
+            _configuration = configuration;
+            _userManager = userManager;
+            _userDtoMapper = userDtoMapper;
+        }
 
         [HttpPost]
         public async Task<string> GenerateToken(ApiUser _user, IConfiguration _configuration)
@@ -42,11 +54,58 @@ namespace LinkMeetShareProject.Controllers
                 expires: DateTime.Now.AddMinutes(Convert.ToInt32(_configuration["JwtSettings:DurationInMinutes"])),
                 signingCredentials: credentials
             );
-
-
             return new JwtSecurityTokenHandler().WriteToken(token);
-
-
         }
+
+        [HttpPost("login")]
+        public async Task<AuthResponseDto> Login(LoginDto loginDto)
+        {
+            var _user = await _userManager.FindByEmailAsync(loginDto.Email);
+            bool isValidUser = await _userManager.CheckPasswordAsync(_user, loginDto.Password);
+            var token = await GenerateToken(_user, _configuration);
+            return new AuthResponseDto()
+            {
+                Token = token,
+                UserId = _user.Id,
+                RefreshToken = await CreateRefreshToken(_user)
+            };
+        }
+
+        [HttpPost("Register")]
+        public async Task<IEnumerable<IdentityError>> Register(ApiUserDto userDto)
+        {
+            _user = _userDtoMapper.dtoToUser(userDto);
+
+          //_user = new ApiUser();
+          //_user.Email=userDto.Email;
+          // _user.FirstName=userDto.FirstName;
+          //  _user.LastName =userDto.LastName;
+          //  _user.UserName = userDto.Email;
+          
+            var result = await _userManager.CreateAsync(_user, userDto.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(_user, "User");
+
+            }
+            return result.Errors;
+        }
+
+
+        public async Task<string> CreateRefreshToken(ApiUser _user)
+        {
+            await _userManager.RemoveAuthenticationTokenAsync(_user, _loginProvider, _refreshToken);
+            var newRefreshToken = await _userManager.GenerateUserTokenAsync(_user,
+                _loginProvider, _refreshToken);
+            var result = await _userManager.SetAuthenticationTokenAsync(_user, _loginProvider,
+                _refreshToken, newRefreshToken);
+            return newRefreshToken;
+        }
+
+
+
+
+
     }
 }
