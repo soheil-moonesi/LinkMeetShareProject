@@ -29,7 +29,7 @@ namespace LinkMeetShareProject.Controllers
             _userDtoMapper = userDtoMapper;
         }
 
-        [HttpPost]
+        [HttpPost("gentok")]
         public async Task<string> GenerateToken(ApiUser _user, IConfiguration _configuration)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
@@ -92,7 +92,7 @@ namespace LinkMeetShareProject.Controllers
             return result.Errors;
         }
 
-
+        [HttpPost("rftoken")]
         public async Task<string> CreateRefreshToken(ApiUser _user)
         {
             await _userManager.RemoveAuthenticationTokenAsync(_user, _loginProvider, _refreshToken);
