@@ -1,6 +1,6 @@
 ﻿  using System.ComponentModel.DataAnnotations;
 
-  namespace LinkMeetShareProject.Dto;
+  namespace BlazorAppFront;
 
 public class LoginDto 
 {

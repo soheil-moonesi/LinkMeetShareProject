@@ -35,5 +35,45 @@ namespace BlazorAppFront.Services
         }
 
 
-    }
+       
+        public async Task<LoginResult> loginAct(LoginDto user)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("ApiCalls");
+                var response = await client.PostAsJsonAsync("https://localhost:7044/api/Auth/login", user);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var authResponse = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+                    return new LoginResult
+                    {
+                        success = true,
+                        email = user.email,
+                        jwtBearer = authResponse.Token,
+                        message = "Login successful"
+                    };
+                }
+                else
+                {
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    return new LoginResult
+                    {
+                        success = false,
+                        message = $"Login failed: {response.StatusCode} - {errorMessage}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new LoginResult
+                {
+                    success = false,
+                    message = $"Error: {ex.Message}"
+                };
+            }
+        }
+
+
+}
 }

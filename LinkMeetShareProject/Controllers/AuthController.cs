@@ -21,54 +21,89 @@ namespace LinkMeetShareProject.Controllers
         private UserDtoMapper _userDtoMapper;
         private const string _loginProvider = "LinkMeetShare";
         private const string _refreshToken = "RefreshToken";
+        private readonly ILogger<AuthController> _logger;
         public AuthController(IConfiguration configuration, UserManager<ApiUser> userManager,
             ILogger<AuthController> logger,UserDtoMapper userDtoMapper)
         {
             _configuration = configuration;
             _userManager = userManager;
             _userDtoMapper = userDtoMapper;
+            _logger = logger;
         }
 
         [HttpPost("gentok")]
         public async Task<string> GenerateToken(ApiUser _user, IConfiguration _configuration)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var roles = await _userManager.GetRolesAsync(_user);
-            var roleClaims = roles.Select(x => new Claim(ClaimTypes.Role, x)).ToList();
-            var userClaims = await _userManager.GetClaimsAsync(_user);
-
-            var claims = new List<Claim>
+            try
             {
-                new Claim(JwtRegisteredClaimNames.Sub, _user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, _user.Email),
-                new Claim("uid", _user.Id)
-            }.Union(userClaims).Union(roleClaims);
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JwtSettings:Issuer"],
-                audience: _configuration["JwtSettings:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToInt32(_configuration["JwtSettings:DurationInMinutes"])),
-                signingCredentials: credentials
-            );
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                var roles = await _userManager.GetRolesAsync(_user);
+                var roleClaims = roles.Select(x => new Claim(ClaimTypes.Role, x)).ToList();
+                var userClaims = await _userManager.GetClaimsAsync(_user);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, _user.Email),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, _user.Email),
+                    new Claim("uid", _user.Id)
+                }.Union(userClaims).Union(roleClaims);
+
+                var token = new JwtSecurityToken(
+                    issuer: _configuration["JwtSettings:Issuer"],
+                    audience: _configuration["JwtSettings:Audience"],
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(Convert.ToInt32(_configuration["JwtSettings:DurationInMinutes"])),
+                    signingCredentials: credentials
+                );
+                return new JwtSecurityTokenHandler().WriteToken(token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error generating token: {ex.Message}", ex);
+            }
         }
 
         [HttpPost("login")]
-        public async Task<AuthResponseDto> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody]LoginDto loginDto)
         {
-            var _user = await _userManager.FindByEmailAsync(loginDto.Email);
-            bool isValidUser = await _userManager.CheckPasswordAsync(_user, loginDto.Password);
-            var token = await GenerateToken(_user, _configuration);
-            return new AuthResponseDto()
+            try
             {
-                Token = token,
-                UserId = _user.Id,
-                RefreshToken = await CreateRefreshToken(_user)
-            };
+                if (loginDto == null)
+                {
+                    return BadRequest("Invalid login request");
+                }
+
+                var _user = await _userManager.FindByEmailAsync(loginDto.email);
+                if (_user == null)
+                {
+                    return Unauthorized($"User not found with email: {loginDto.email}");
+                }
+                
+                bool isValidUser = await _userManager.CheckPasswordAsync(_user, loginDto.password);
+                if (!isValidUser)
+                {
+                    return Unauthorized("Invalid password");
+                }
+
+                var token = await GenerateToken(_user, _configuration);
+                var refreshToken = await CreateRefreshToken(_user);
+                
+                return Ok(new AuthResponseDto
+                {
+                    Token = token,
+                    UserId = _user.Id,
+                    RefreshToken = refreshToken
+                });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                _logger.LogError(ex, "Error during login");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPost("Register")]
@@ -82,7 +117,7 @@ namespace LinkMeetShareProject.Controllers
           //  _user.LastName =userDto.LastName;
           //  _user.UserName = userDto.Email;
           
-            var result = await _userManager.CreateAsync(_user, userDto.Password);
+            var result = await _userManager.CreateAsync(_user, userDto.password);
 
             if (result.Succeeded)
             {

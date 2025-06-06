@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlazorJTWAuth.Shared
+namespace BlazorAppFront
 {
 
     public class LoginResult

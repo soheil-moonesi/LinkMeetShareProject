@@ -72,7 +72,12 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
+app.UseAuthentication(); 
+
+app.UseRouting();
+
 app.UseAuthorization();
+
 
 app.MapControllers();
 
@@ -85,57 +90,28 @@ using (var scope = app.Services.CreateScope())
         context.Database.EnsureCreated();
         try
         {
-       // todo: create process to stop when seed is done before
-            //context.Add(new MeetingLink()
-            //{
-            //    MeetingLinkKey = 1,
-            //    Link = "www.soheil.com",
-            //    Tittle = "soheil Moonesi",
-            //});
+            // Add test user
+            var userManager = servicesProvider.GetRequiredService<UserManager<ApiUser>>();
+            var testUser = new ApiUser
+            {
+                UserName = "test@example.com",
+                Email = "test@example.com",
+                FirstName = "Test",
+                LastName = "User"
+            };
 
-            //context.SaveChanges();
-
-            //context.Add(new User
-            //{
-            //    UserKey = 1,
-            //    Email = "soheil@gmail.com"
-            //});
-
-            //context.Add(new MeetingLinkUser()
-            //{
-            //    MeetingLinkKey_R = 1,
-            //    UserKey_R = 1
-            //});
-
-            //context.SaveChanges();
-
-
-            //context.Add(new MeetingLink()
-            //{
-            //    MeetingLinkKey = 2,
-            //    Link = "www.soh.com",
-            //    Tittle = "soh",
-            //});
-
-            //context.SaveChanges();
-
-            //context.Add(new MeetingLink()
-            //{
-            //    MeetingLinkKey = 3,
-            //    Link = "www.face.com",
-            //    Tittle = "face",
-            //});
-
-            //context.SaveChanges();
-
-
+            var result = await userManager.CreateAsync(testUser, "Test123!");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(testUser, "User");
+            }
         }
         catch (Exception ex)
         {
-            throw;
+            // Log the error
+            var logger = servicesProvider.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "An error occurred while seeding the database.");
         }
-
-
     }
 }
 

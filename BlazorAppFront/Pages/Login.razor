@@ -1,11 +1,17 @@
 ﻿@page "/login"
-@using BlazorJTWAuth.Shared
 @inject HttpClient Http
 @inject IJSRuntime jsr
+@using BlazorAppFront.Services
+@inject UserServices UserService
 
 <h3>Login</h3>
 
-<p>@message</p>
+@if (!string.IsNullOrEmpty(message))
+{
+	<div class="alert @(message.Contains("successful") ? "alert-success" : "alert-danger")">
+		@message
+	</div>
+}
 
 <EditForm Model="user" OnValidSubmit="OnValid" style="max-width:500px;">
 	<DataAnnotationsValidator />
@@ -22,23 +28,29 @@
 </EditForm>
 
 @code {
-	LoginModel user = new LoginModel();
+	LoginDto user = new LoginDto();
 	string message = string.Empty;
 	bool isDisabled = false;
 
 	private async Task OnValid()
 	{
 		isDisabled = true;
-		using (var msg = await Http.PostAsJsonAsync<LoginModel>("/api/Auth/login", user, System.Threading.CancellationToken.None))
+		try
 		{
-			if (msg.IsSuccessStatusCode)
+			var result = await UserService.loginAct(user);
+			message = result.message;
+			if (result.success)
 			{
-				LoginResult result = await msg.Content.ReadFromJsonAsync<LoginResult>();
-				message = result.message;
-				isDisabled = false;
-				if (result.success)
-					await jsr.InvokeVoidAsync("localStorage.setItem", "user", $"{result.email};{result.jwtBearer}").ConfigureAwait(false);
+				await jsr.InvokeVoidAsync("localStorage.setItem", "user", $"{result.email};{result.jwtBearer}");
 			}
+		}
+		catch (Exception ex)
+		{
+			message = $"Error: {ex.Message}";
+		}
+		finally
+		{
+			isDisabled = false;
 		}
 	}
 }
