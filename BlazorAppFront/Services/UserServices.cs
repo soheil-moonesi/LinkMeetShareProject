@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Json;
-
 namespace BlazorAppFront.Services
 {
     public class UserServices

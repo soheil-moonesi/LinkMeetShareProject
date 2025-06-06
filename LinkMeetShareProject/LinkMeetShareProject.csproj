@@ -31,4 +31,8 @@
     <ProjectReference Include="..\BlazorAppFront\BlazorAppFront.csproj" />
   </ItemGroup>
 
+		<ItemGroup>
+		<ProjectReference Include="..\ShareLib\ShareLib.csproj" />
+	</ItemGroup>
+
 </Project>

@@ -2,6 +2,8 @@
 @inject HttpClient Http
 @inject IJSRuntime jsr
 @using BlazorAppFront.Services
+@using ShareLib
+
 @inject UserServices UserService
 
 <h3>Login</h3>
@@ -28,6 +30,7 @@
 </EditForm>
 
 @code {
+	
 	LoginDto user = new LoginDto();
 	string message = string.Empty;
 	bool isDisabled = false;

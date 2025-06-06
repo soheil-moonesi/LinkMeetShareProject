@@ -15,4 +15,9 @@
     <PackageReference Include="Radzen.Blazor" Version="7.0.3" />
   </ItemGroup>
 
+
+	<ItemGroup>
+		<ProjectReference Include="..\ShareLib\ShareLib.csproj"/>
+	</ItemGroup>
+	
 </Project>
