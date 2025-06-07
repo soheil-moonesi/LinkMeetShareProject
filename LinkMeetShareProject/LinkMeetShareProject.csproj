@@ -33,6 +33,6 @@
 
 		<ItemGroup>
 		<ProjectReference Include="..\ShareLib\ShareLib.csproj" />
-	</ItemGroup>
+	    </ItemGroup>
 
 </Project>

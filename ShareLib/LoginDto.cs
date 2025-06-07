@@ -1,6 +1,6 @@
 ﻿  using System.ComponentModel.DataAnnotations;
 
-  namespace BlazorAppFront;
+  namespace ShareLib;
 
 public class LoginDto 
 {

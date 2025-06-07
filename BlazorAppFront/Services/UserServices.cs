@@ -1,4 +1,6 @@
 ﻿using System.Net.Http.Json;
+using ShareLib;
+
 namespace BlazorAppFront.Services
 {
     public class UserServices
@@ -74,5 +76,14 @@ namespace BlazorAppFront.Services
         }
 
 
-}
+        public async Task<string> register(ApiUserDto user2)
+        {
+            var client = _httpClientFactory.CreateClient("ApiCalls");
+            var response = await client.PostAsJsonAsync("https://localhost:7044/api/Auth/register", user2);
+            return "ok";
+        }
+
+
+
+    }
 }

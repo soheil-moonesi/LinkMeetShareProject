@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LinkMeetShareProject.Dto
+namespace ShareLib
 {
     public class ApiUserDto : LoginDto
     {

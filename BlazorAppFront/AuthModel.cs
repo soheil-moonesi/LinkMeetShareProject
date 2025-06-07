@@ -27,4 +27,8 @@ namespace BlazorAppFront
         [Compare("password", ErrorMessage = "Password and confirm password do not match.")]
         public string confirmpwd { get; set; }
     }
+
+
+
+   
 }

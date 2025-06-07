@@ -1,4 +1,4 @@
-﻿namespace BlazorAppFront
+﻿namespace ShareLib
 
 {
     public class AuthResponseDto

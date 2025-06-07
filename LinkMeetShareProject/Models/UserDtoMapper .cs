@@ -2,6 +2,7 @@
 using LinkMeetShareProject.Dto;
 using LinkMeetShareProject.Models;
 using Riok.Mapperly.Abstractions;
+using ShareLib;
 
 
 namespace LinkMeetShareProject

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using ShareLib;
+using LoginDto = LinkMeetShareProject.Dto.LoginDto;
 
 namespace LinkMeetShareProject.Controllers
 {
@@ -106,10 +108,12 @@ namespace LinkMeetShareProject.Controllers
             }
         }
 
-        [HttpPost("Register")]
-        public async Task<IEnumerable<IdentityError>> Register(ApiUserDto userDto)
-        {
-            _user = _userDtoMapper.dtoToUser(userDto);
+        [HttpPost("register")]
+        public async Task<string> Register(ApiUserDto userDto)
+	        //        public async Task<IEnumerable<IdentityError>> Register(ApiUserDto userDto)
+
+		{
+			_user = _userDtoMapper.dtoToUser(userDto);
 
           //_user = new ApiUser();
           //_user.Email=userDto.Email;
@@ -124,7 +128,8 @@ namespace LinkMeetShareProject.Controllers
                 await _userManager.AddToRoleAsync(_user, "User");
 
             }
-            return result.Errors;
+            //return result.Errors;
+            return "okey";
         }
 
         [HttpPost("rftoken")]
