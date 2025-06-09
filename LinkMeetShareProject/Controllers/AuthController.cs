@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using LinkMeetShareProject.Dto;
 using LinkMeetShareProject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -174,6 +175,12 @@ namespace LinkMeetShareProject.Controllers
 	        return null;
         }
 
+        [Authorize]
+        [HttpPost("test")]
+        public async Task<string> testcon()
+        {
+	        return "ss";
+        }
 
 
 	}
