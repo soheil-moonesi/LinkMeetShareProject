@@ -17,7 +17,7 @@ builder.Services.AddDbContext<LinkMeetShareProjectDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
 builder.Services.AddIdentityCore<ApiUser>()
-    .AddRoles<IdentityRole>().AddTokenProvider<DataProtectorTokenProvider<ApiUser>>("HotelListingApi")
+    .AddRoles<IdentityRole>().AddTokenProvider<DataProtectorTokenProvider<ApiUser>>("LinkMeetShare")
     .AddEntityFrameworkStores<LinkMeetShareProjectDbContext>()
     .AddDefaultTokenProviders();
 
@@ -50,7 +50,7 @@ builder.Services.AddAuthentication(option =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", cpb => cpb.AllowAnyHeader().AllowAnyHeader().AllowAnyOrigin());
+    options.AddPolicy("AllowAll", cpb => cpb.AllowAnyHeader().AllowAnyOrigin());
     //cpb = configure Policy builder
 });
 
