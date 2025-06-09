@@ -143,6 +143,7 @@ namespace LinkMeetShareProject.Controllers
             return newRefreshToken;
         }
 
+        [HttpGet("vr")]
         public async Task<AuthResponseDto> VerifyRefreshToken(AuthResponseDto request)
         {
 	        var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
