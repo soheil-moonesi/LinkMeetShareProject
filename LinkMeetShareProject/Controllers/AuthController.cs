@@ -34,7 +34,7 @@ namespace LinkMeetShareProject.Controllers
         }
 
         [HttpPost("gentok")]
-        public async Task<string> GenerateToken(ApiUser _user, IConfiguration _configuration)
+        public async Task<string> GenerateToken(ApiUser _user)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace LinkMeetShareProject.Controllers
                     return Unauthorized("Invalid password");
                 }
 
-                var token = await GenerateToken(_user, _configuration);
+                var token = await GenerateToken(_user);
                 var refreshToken = await CreateRefreshToken(_user);
                 
                 return Ok(new AuthResponseDto
@@ -143,9 +143,37 @@ namespace LinkMeetShareProject.Controllers
             return newRefreshToken;
         }
 
+        public async Task<AuthResponseDto> VerifyRefreshToken(AuthResponseDto request)
+        {
+	        var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+	        var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(request.Token);
+	        var username = tokenContent.Claims.ToList().FirstOrDefault(q => q.Type == JwtRegisteredClaimNames.Email)
+		        ?.Value;
+	        _user = await _userManager.FindByNameAsync(username);
+
+	        if (_user == null || _user.Id != request.UserId)
+	        {
+		        return null;
+	        }
+
+	        var isValidRefreshToken =
+		        await _userManager.VerifyUserTokenAsync(_user, _loginProvider, _refreshToken, request.RefreshToken);
+	        if (isValidRefreshToken)
+	        {
+		        var token = await GenerateToken(_user);
+		        return new AuthResponseDto()
+		        {
+			        Token = token,
+			        UserId = _user.Id,
+			        RefreshToken = await CreateRefreshToken(_user)
+		        };
+	        }
+
+	        await _userManager.UpdateSecurityStampAsync(_user);
+	        return null;
+        }
 
 
 
-
-    }
+	}
 }
