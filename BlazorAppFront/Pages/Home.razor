@@ -43,6 +43,24 @@
     <EventConsole @ref=@console />
 </RadzenStack>
 
+<RadzenStack Orientation="Orientation.Vertical" Gap="1rem" class="iterating-items-container">
+    @foreach (var item in itemsToDisplay)
+    {
+        <RadzenCard @key="item.Id" Style="margin-bottom: 1rem;" Variant="Variant.Outlined">
+            <ChildContent>
+                <RadzenStack Orientation="Orientation.Vertical" Gap="0.5rem">
+                    <RadzenLabel Text="@item.Title" Style="font-size: 1.25rem; font-weight: bold;" />
+                    <RadzenText Text="@item.Description" />
+                    <RadzenLabel Text="Created:" Style="display: inline; margin-right: 0.5rem;" />
+                    <RadzenBadge Text="@item.CreatedDate.ToShortDateString()" 
+                                  Style="font-size: 0.8rem;" />
+                </RadzenStack>
+            </ChildContent>
+        </RadzenCard>
+    }
+</RadzenStack>
+
+
 
 <Counter></Counter>
 
@@ -110,5 +128,23 @@ Welcome to your new app.
     string value = "";
 
      Variant variant = Variant.Outlined;
+
+
+     public class DisplayItem
+     {
+         public int Id { get; set; }
+         public string Title { get; set; }
+         public string Description { get; set; }
+         public DateTime CreatedDate { get; set; }
+     }
+
+     // List of items to iterate through
+     private List<DisplayItem> itemsToDisplay = new List<DisplayItem>
+     {
+         new DisplayItem { Id = 1, Title = "First Item", Description = "This is the first sample item", CreatedDate = DateTime.Now.AddDays(-2) },
+         new DisplayItem { Id = 2, Title = "Second Item", Description = "This is another sample item", CreatedDate = DateTime.Now.AddDays(-1) },
+         new DisplayItem { Id = 3, Title = "Third Item", Description = "Yet another sample item", CreatedDate = DateTime.Now }
+     };
+
 
 }
