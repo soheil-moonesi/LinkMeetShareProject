@@ -27,9 +27,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="8.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BlazorAppFront\BlazorAppFront.csproj" />
-  </ItemGroup>
+  
 
 		<ItemGroup>
 		<ProjectReference Include="..\ShareLib\ShareLib.csproj" />

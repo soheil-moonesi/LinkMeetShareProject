@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkMeetShareProject", "Lin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppFront", "BlazorAppFront\BlazorAppFront.csproj", "{C5F0A0A2-9D19-4298-8A10-E34F3143F8D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareLib", "ShareLib\ShareLib.csproj", "{98016552-B7EC-44C1-89FC-C62699620EC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareLib", "ShareLib\ShareLib.csproj", "{98016552-B7EC-44C1-89FC-C62699620EC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,59 +1,30 @@
 ﻿@page "/login"
-@inject HttpClient Http
-@inject IJSRuntime jsr
-@using BlazorAppFront.Services
 @using ShareLib
-
-@inject UserServices UserService
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+@inject IConfiguration Configuration
 
 <h3>Login</h3>
-
-@if (!string.IsNullOrEmpty(message))
-{
-	<div class="alert @(message.Contains("successful") ? "alert-success" : "alert-danger")">
-		@message
-	</div>
-}
-
-<EditForm Model="user" OnValidSubmit="OnValid" style="max-width:500px;">
-	<DataAnnotationsValidator />
-	<ValidationSummary />
-	<div class="mb-2">
-		<InputText class="form-control" @bind-Value="user.email" placeholder="Enter Email"></InputText>
-	</div>
-	<div class="mb-2">
-		<InputText type="password" class="form-control" @bind-Value="user.password" placeholder="Enter Password"></InputText>
-	</div>
-	<div class="mb-2 text-right">
-		<button class="btn btn-secondary" disabled="@isDisabled">login</button>
-	</div>
+<EditForm Model="user" OnSubmit="HandleLogin">
+    <label for="username">Name</label>
+    <InputText id="username" @bind-Value="user.email" />
+    <label for="password">Password</label>
+    <InputText id="password" @bind-Value="user.password" type="password" />
+    <button type="submit" class="btn btn-primary">Do it!</button>
 </EditForm>
 
 @code {
-	
-	LoginDto user = new LoginDto();
-	string message = string.Empty;
-	bool isDisabled = false;
+    LoginDto user = new LoginDto();
+    async Task HandleLogin()
+    {
+            var result = await Http.PostAsJsonAsync("https://localhost:7044/api/Auth/login", user);
+        var token = await result.Content.ReadAsStringAsync();
 
-	private async Task OnValid()
-	{
-		isDisabled = true;
-		try
-		{
-			var result = await UserService.loginAct(user);
-			message = result.message;
-			if (result.success)
-			{
-				await jsr.InvokeVoidAsync("localStorage.setItem", "user", $"{result.email};{result.jwtBearer}");
-			}
-		}
-		catch (Exception ex)
-		{
-			message = $"Error: {ex.Message}";
-		}
-		finally
-		{
-			isDisabled = false;
-		}
-	}
+        //Just hard coding the token for now :)
+        //var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlNoYWhyaXlhciIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTUxNjIzOTAyMn0.l9E7Oypb-ozndpFUkeVhOYzhtjGEuFmdYdAxhbpXAFY";
+
+        await LocalStorage.SetItemAsync("token", token);
+        await AuthStateProvider.GetAuthenticationStateAsync();
+    }
 }
