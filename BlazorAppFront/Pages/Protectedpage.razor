@@ -1,7 +1,48 @@
 ﻿@page "/Protectedpage"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using BlazorAppFront.Services
+@inject UserServices UserService
+
 
 @attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <h1>Protected Page</h1>
 <p>This page is only visible to authenticated users.</p>
+
+@if (claims != null)
+{
+    <h3>Available Claims:</h3>
+    <ul>
+        @foreach (var claim in claims)
+        {
+            <li>@claim.Type: @claim.Value</li>
+        }
+    </ul>
+}
+
+@code {
+    private IEnumerable<Claim> claims;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Get all claims
+        claims = user.Claims;
+
+        var email = user.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email)?.Value;
+        if (!string.IsNullOrEmpty(email))
+        {
+            // Call your service with the email
+            var result = await UserService.GetUserByemail(email);
+            // Handle the result as needed
+
+            var x = result;
+            Console.WriteLine(x);
+        }
+    }
+}

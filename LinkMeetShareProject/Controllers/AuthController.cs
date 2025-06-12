@@ -13,6 +13,9 @@ using LoginDto = LinkMeetShareProject.Dto.LoginDto;
 
 namespace LinkMeetShareProject.Controllers
 {
+
+    //todo: p1 : refactor all codebase
+
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase

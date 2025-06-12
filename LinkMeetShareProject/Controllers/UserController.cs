@@ -1,5 +1,7 @@
-﻿using LinkMeetShareProject.Dto;
+﻿using System.Security.Cryptography.X509Certificates;
+using LinkMeetShareProject.Dto;
 using LinkMeetShareProject.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +15,14 @@ namespace LinkMeetShareProject.Controllers
     {
         private readonly UserMapper _mapper;
         private LinkMeetShareProjectDbContext _context;
-        public UserController(LinkMeetShareProjectDbContext context, UserMapper mapper)
+        private readonly UserManager<ApiUser> _userManager; // Add this
+
+        public UserController(LinkMeetShareProjectDbContext context, UserMapper mapper,
+            UserManager<ApiUser> userManager)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
 
@@ -31,7 +37,7 @@ namespace LinkMeetShareProject.Controllers
         [HttpGet("{id}")]
         public async Task<User> Get(int id)
         {
-           return await _context.User.FindAsync(id);
+            return await _context.User.FindAsync(id);
         }
 
         // POST api/<UserController>
@@ -41,8 +47,8 @@ namespace LinkMeetShareProject.Controllers
         public async Task<string> AddUser([FromBody] UserAddDto value)
         {
 
-            var UserAdd  = _mapper.UserAddDtoToUser(value);
-             _context.User.Add(UserAdd);
+            var UserAdd = _mapper.UserAddDtoToUser(value);
+            _context.User.Add(UserAdd);
             _context.SaveChanges();
             return "user added";
         }
@@ -51,9 +57,9 @@ namespace LinkMeetShareProject.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] UserAddDto value)
         {
-          var x =  _context.User.Find(id);
-          x.Email = value.EmailDto;
-          _context.SaveChanges();
+            var x = _context.User.Find(id);
+            x.Email = value.EmailDto;
+            _context.SaveChanges();
         }
 
         //todo:remove User id from Dto
@@ -96,20 +102,43 @@ namespace LinkMeetShareProject.Controllers
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}/{linkId}")]
-        public void DeleteMeetingLink(int id,int linkId)
+        public void DeleteMeetingLink(int id, int linkId)
         {
             var existingUser = _context.User.Include(q => q.UserEnrollLinks).FirstOrDefault(q => q.UserKey == id);
             foreach (var link in existingUser.UserEnrollLinks)
             {
-                if (linkId==link.MeetingLinkKey_R)
+                if (linkId == link.MeetingLinkKey_R)
                 {
                     _context.MeetingLinkUser.Remove(link);
                     _context.SaveChanges();
                 }
             }
 
+        }
 
+        [HttpPost("getE")]
+        public async Task<string> getEmailAndReturn([FromBody] EmailRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email))
+            {
+                return null;
+            }
 
+            // Use UserManager to find the user in AspNetUsers table
+            var identityUser = await _userManager.FindByEmailAsync(request.Email);
+            if (identityUser == null)
+            {
+                return null;
+            }
+
+            // Return the Identity user's ID
+            return identityUser.Id;
         }
     }
+
+    public class EmailRequest
+    {
+        public string Email { get; set; }
+    }
 }
+

@@ -83,7 +83,29 @@ namespace BlazorAppFront.Services
             return "ok";
         }
 
+        // ... existing code ...
 
+        public async Task<string> GetUserByemail(string email)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("ApiCalls");
+                // Create a simple object to send the email
+                var emailRequest = new { email = email };
+                var response = await client.PostAsJsonAsync("https://localhost:7044/api/User/getE", emailRequest);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting user: {ex.Message}");
+                return null;
+            }
+        }
 
     }
 }
