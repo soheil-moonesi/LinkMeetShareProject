@@ -1,4 +1,5 @@
-﻿@inject Services.UserServices UserServices;
+﻿@using BlazorAppFront.Model
+@inject Services.UserServices UserServices;
 @inherits LayoutComponentBase
 
 <div class="page">
@@ -21,12 +22,8 @@
 </div>
 
 
-
-
 @code
 {
-
- 
     protected override async Task OnInitializedAsync()
     {
         await AddUser();

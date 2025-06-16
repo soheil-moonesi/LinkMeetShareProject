@@ -1,4 +1,4 @@
-﻿namespace BlazorAppFront
+﻿namespace BlazorAppFront.Model
 {
     public class UserAddViewModel
     {

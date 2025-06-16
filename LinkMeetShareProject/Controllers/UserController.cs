@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LinkMeetShareProject.Controllers
 {
+    //todo: how to create back office for test
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -25,7 +26,6 @@ namespace LinkMeetShareProject.Controllers
             _userManager = userManager;
         }
 
-
         // GET: api/<UserController>
         [HttpGet]
         public async Task<IEnumerable<User>> Get()
@@ -40,13 +40,10 @@ namespace LinkMeetShareProject.Controllers
             return await _context.User.FindAsync(id);
         }
 
-        // POST api/<UserController>
-
         //todo : create Dto for Post 
         [HttpPost("AddUser")]
         public async Task<string> AddUser([FromBody] UserAddDto value)
         {
-
             var UserAdd = _mapper.UserAddDtoToUser(value);
             _context.User.Add(UserAdd);
             _context.SaveChanges();

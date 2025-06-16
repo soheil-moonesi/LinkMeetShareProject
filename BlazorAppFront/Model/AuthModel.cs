@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlazorAppFront
+namespace BlazorAppFront.Model
 {
-
+    //todo: replace to share project if model use in api and front
+    //todo: convert each calss to seperate class
     public class LoginResult
     {
         public string message { get; set; }
@@ -30,5 +31,5 @@ namespace BlazorAppFront
 
 
 
-   
+
 }
