@@ -1,5 +1,5 @@
 ﻿
-    public class MeetingLink2
+    public class MeetingLink
     {
         public int MeetingLinkKey { get; set; }
         public string Tittle { get; set; }

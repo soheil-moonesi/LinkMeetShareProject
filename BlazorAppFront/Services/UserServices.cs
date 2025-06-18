@@ -24,11 +24,11 @@ namespace BlazorAppFront.Services
             return "ooo0";
         }
 
-        public async Task<List<MeetingLink2>> getlinks()
+        public async Task<List<MeetingLink>> getlinks()
         {
             var client = _httpClientFactory.CreateClient("ApiCalls");
             var response = await client.GetAsync("https://localhost:7044/api/Meeting");
-            var result = await response.Content.ReadFromJsonAsync<List<MeetingLink2>>();
+            var result = await response.Content.ReadFromJsonAsync<List<MeetingLink>>();
             foreach (var x in result)
             {
             Console.WriteLine(x.Link);
