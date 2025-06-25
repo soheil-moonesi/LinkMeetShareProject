@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="LiteBus" Version="2.0.0" />
+    <PackageReference Include="LiteBus.Extensions.MicrosoftDependencyInjection" Version="2.0.0" />
+  </ItemGroup>
+
 </Project>

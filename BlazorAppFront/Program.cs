@@ -23,6 +23,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddHttpClient("ApiCalls");
 
 builder.Services.AddScoped<UserServices>();
+builder.Services.AddScoped<AuthServices>();
+
 builder.Services.AddRadzenComponents();
 builder.Services.AddTransient<IValidator<Model>, UserValidator>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomStateProvider>();

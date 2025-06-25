@@ -1,12 +1,12 @@
 using System.Text;
 using LinkMeetShareProject;
 using LinkMeetShareProject.Models;
+using LiteBus.Messaging.Extensions.MicrosoftDependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
 using Microsoft.IdentityModel.Tokens;
-
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +22,7 @@ builder.Services.AddIdentityCore<ApiUser>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllers();
+
 builder.Services.AddScoped<UserMapper>();
 builder.Services.AddScoped<UserDtoMapper>();
 
@@ -55,9 +56,13 @@ builder.Services.AddCors(options =>
 });
 
 
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
 
 var app = builder.Build();
 

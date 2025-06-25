@@ -1,4 +1,4 @@
-﻿@page "/useringopage"
+﻿@page "/UserInfoPage"
 @using BlazorAppFront.Services
 @using ShareLib
 @inject HttpClient Http
@@ -6,10 +6,9 @@
 @inject AuthServices AuthService
 
 
-<h3>Register</h3>
+<h3>hiiii</h3>
 
 <p>@message</p>
-<p><a href="/login">@login</a></p>
 
 <EditForm Model="reg" OnValidSubmit="OnValid" style="max-width:500px;">
 	<DataAnnotationsValidator />
@@ -39,7 +38,7 @@
     private async Task OnValid()
     {
         isDisabled = true;
-        var result = await AuthService.register(reg);
+     //   var result = await AuthService.register(reg);
 
     }
 }
