@@ -4,9 +4,13 @@ using LinkMeetShareProject.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ShareLib;
+using LiteBus.Messaging.Abstractions;
+using LiteBus.Queries.Abstractions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
+using LiteBus;
+using LiteBus.Queries;
 namespace LinkMeetShareProject.Controllers
 {
     //todo: how to create back office for test
@@ -17,13 +21,14 @@ namespace LinkMeetShareProject.Controllers
         private readonly UserMapper _mapper;
         private LinkMeetShareProjectDbContext _context;
         private readonly UserManager<ApiUser> _userManager; // Add this
-
+        private IQueryMediator _queryMediator;
         public UserController(LinkMeetShareProjectDbContext context, UserMapper mapper,
-            UserManager<ApiUser> userManager)
+            UserManager<ApiUser> userManager, IQueryMediator queryMediator)
         {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
+            _queryMediator = queryMediator;
         }
 
         // GET: api/<UserController>
@@ -38,6 +43,19 @@ namespace LinkMeetShareProject.Controllers
         public async Task<User> Get(int id)
         {
             return await _context.User.FindAsync(id);
+        }
+
+
+        [HttpGet("litebus/{id}")]
+        public async Task<ActionResult<ApiUser>> GetUserWithLitebus(int id)
+        {
+            var result = await _queryMediator.QueryAsync(new GetUserQuery(id));
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
 
         //todo : create Dto for Post 

@@ -1,7 +1,9 @@
 using System.Text;
 using LinkMeetShareProject;
 using LinkMeetShareProject.Models;
+using LiteBus.Commands.Extensions.MicrosoftDependencyInjection;
 using LiteBus.Messaging.Extensions.MicrosoftDependencyInjection;
+using LiteBus.Queries.Extensions.MicrosoftDependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +24,21 @@ builder.Services.AddIdentityCore<ApiUser>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllers();
+
+
+
+builder.Services.AddLiteBus(liteBus =>
+{
+    liteBus.AddCommandModule(module =>
+    {
+        module.RegisterFromAssembly(typeof(Program).Assembly);
+    });
+
+    liteBus.AddQueryModule(module =>
+    {
+        module.RegisterFromAssembly(typeof(Program).Assembly);
+    });
+});
 
 builder.Services.AddScoped<UserMapper>();
 builder.Services.AddScoped<UserDtoMapper>();

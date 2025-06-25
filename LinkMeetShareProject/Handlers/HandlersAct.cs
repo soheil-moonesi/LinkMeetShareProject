@@ -1,21 +1,30 @@
-﻿using LinkMeetShareProject.Models;
+﻿using LiteBus.Messaging.Abstractions;
+using Microsoft.AspNetCore.Identity;
+using LinkMeetShareProject.Models;
+using LinkMeetShareProject;
+using ShareLib;
 using LiteBus.Queries.Abstractions;
+using System.Runtime.CompilerServices;
 
-namespace LinkMeetShareProject.Handlers
+public class GetUserQueryHandler : IQueryHandler<GetUserQuery, ApiUser>
 {
-    public class HandlersAct
+    private readonly UserManager<ApiUser> _userManager;
+
+    public GetUserQueryHandler(UserManager<ApiUser> userManager)
     {
+        _userManager = userManager;
+    }
 
-        public class GetUserQueryHandler : IQueryHandler<GetUserQuery, User>
+    public async Task<ApiUser> HandleAsync(GetUserQuery message, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync( message.UserId.ToString());
+        if (user == null) return null;
+
+        return new ApiUser
         {
-            public Task<User> HandleAsync(GetUserQuery query, CancellationToken cancellationToken = default)
-            {
-                // Logic to retrieve a user
-                return Task.FromResult(new User());
-            }
-        }
-
-
-
+            Id = user.UserName,
+            Email = user.Email,
+            // Map other properties as needed
+        };
     }
 }
