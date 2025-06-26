@@ -17,7 +17,7 @@ public class GetUserQueryHandler : IQueryHandler<GetUserQuery, ApiUser>
 
     public async Task<ApiUser> HandleAsync(GetUserQuery message, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync( message.UserId.ToString());
+        var user = await _userManager.FindByEmailAsync( message.emailPerson);
         if (user == null) return null;
 
         return new ApiUser

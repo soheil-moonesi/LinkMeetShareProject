@@ -47,7 +47,7 @@ namespace LinkMeetShareProject.Controllers
 
 
         [HttpGet("litebus/{id}")]
-        public async Task<ActionResult<ApiUser>> GetUserWithLitebus(int id)
+        public async Task<ActionResult<ApiUser>> GetUserWithLitebus(string id)
         {
             var result = await _queryMediator.QueryAsync(new GetUserQuery(id));
             if (result == null)

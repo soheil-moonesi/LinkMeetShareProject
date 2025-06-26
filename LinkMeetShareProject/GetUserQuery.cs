@@ -7,11 +7,12 @@ namespace LinkMeetShareProject
 
     public class GetUserQuery : IQuery<ApiUser>
     {
-        public int UserId { get; }
+        public string emailPerson { get; }
 
-        public GetUserQuery(int userId)
+        public GetUserQuery(string userId)
         {
-            UserId = userId;
+            emailPerson = "test@example.com";
+
         }
     }
 }
